@@ -22,12 +22,11 @@ type httpSegmentMessage struct {
 	Payload       string    `json:"payload"`
 	Username      string    `json:"username"`
 	SendTime      time.Time `json:"sendTime"`
-	Number        uint32    `json:"number"`
+	Number        uint32    `json:"segmentNumber"`
 	TotalSegments uint32    `json:"totalSegments"`
 }
 
 func (r *HTTPDataLink) Send(ctx context.Context, segment domain.Segment) error {
-	return nil
 	message, err := json.Marshal(httpSegmentMessage{
 		Payload:       segment.Payload,
 		Username:      segment.Username,

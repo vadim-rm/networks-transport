@@ -83,6 +83,7 @@
         "y": 0
       },
       "id": 1,
+      "interval": "1s",
       "options": {
         "legend": {
           "calcs": [],
@@ -132,5 +133,5 @@
   "timezone": "browser",
   "title": "Дашборд",
   "uid": "dekhzrzmphdkwf",
-  "version": 2
+  "version": 1
 }

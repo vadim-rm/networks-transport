@@ -20,7 +20,7 @@ type messageSegments struct {
 	SegmentsLeft     uint32
 	Username         string
 	SendTime         time.Time
-	LastReceived     *time.Time
+	LastReceived     time.Time
 	SegmentsSentTime time.Time
 	Segments         []messageSegmentsSegment
 }
@@ -68,13 +68,11 @@ func (s *TransportImpl) scanStorage(ctx context.Context) {
 	defer ticker.Stop()
 
 	for _, message := range s.storage {
-		if message.LastReceived == nil {
+		if time.Since(message.LastReceived) < 3*scanPeriod {
 			continue
 		}
 
-		if time.Since(*message.LastReceived) < 3*scanPeriod {
-			continue
-		}
+		log.Printf("segment timeout for message")
 
 		delete(s.storage, message.SendTime)
 
@@ -141,8 +139,7 @@ func (s *TransportImpl) processSegment(segment domain.Segment) (messageSegments,
 		Payload:    segment.Payload,
 		ReceivedAt: time.Now(),
 	}
-	now := time.Now()
-	message.LastReceived = &now
+	message.LastReceived = time.Now()
 	s.storage[segment.SendTime] = message
 
 	if message.SegmentsLeft == 0 {
@@ -164,6 +161,7 @@ func (s *TransportImpl) SendMessage(ctx context.Context, message domain.Message)
 		SendTime:         message.SendTime,
 		Segments:         make([]messageSegmentsSegment, len(rawSegments)),
 		SegmentsSentTime: time.Now(),
+		LastReceived:     time.Now(),
 	}
 
 	for i, segment := range rawSegments {

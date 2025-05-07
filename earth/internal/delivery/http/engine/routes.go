@@ -9,8 +9,6 @@ import (
 func InitializeExternalRoutes(
 	engine *gin.Engine,
 	message *handlers.Message,
-	segment *handlers.Segment,
 ) {
 	engine.POST("send", message.Send)
-	engine.POST("transfer", segment.Receive)
 }

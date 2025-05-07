@@ -47,9 +47,8 @@ func Run() {
 	})
 
 	applicationRepository := repository.NewHTTPApplication(cfg.Services.ApplicationLevelBaseUrl)
-	dataLinkRepository := repository.NewHTTPDataLink(cfg.Services.DataLinkLevelBaseUrl)
 
-	transportService := service.NewTransportImpl(dataLinkRepository, applicationRepository)
+	transportService := service.NewTransportImpl(applicationRepository)
 	go transportService.Run(ctx)
 
 	segmentsConsumer := consumer.NewConsumer(
@@ -66,7 +65,6 @@ func Run() {
 	router := engine.Initialize()
 	engine.InitializeExternalRoutes(
 		router,
-		handlers.NewMessage(transportService),
 		handlers.NewSegment(writer),
 	)
 

@@ -22,7 +22,6 @@ type Http struct {
 
 type Services struct {
 	ApplicationLevelBaseUrl string `env:"APPLICATION_LEVEL_BASE_URL"`
-	DataLinkLevelBaseUrl    string `env:"DATA_LINK_LEVEL_BASE_URL"`
 }
 
 func Load() (Config, error) {
